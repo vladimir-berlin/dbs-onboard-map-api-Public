@@ -14,7 +14,7 @@ Install system dependencies (Ubuntu):
 sudo apt-get install cmake libgmock-dev libgtest-dev rapidjson-dev doxygen libcurl4-openssl-dev protobuf-compiler libprotobuf-dev libboost-all-dev
 ```
 
-On macOS, equivalents via Homebrew: `boost`, `protobuf`, `curl`, `rapidjson`, `googletest`, `doxygen`.
+On macOS, equivalents via Homebrew: `boost`, `protobuf`, `curl`, `rapidjson`, `googletest`, `doxygen`, `leveldb` (pulls in `snappy` automatically).
 
 Build (outputs to `./build/`):
 ```bash
