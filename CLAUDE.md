@@ -9,6 +9,13 @@ First-time setup — pull all submodules (curlpp, googletest, here-olp-sdk, rapi
 git submodule update --init --recursive
 ```
 
+Install system dependencies (Ubuntu):
+```bash
+sudo apt-get install cmake libgmock-dev libgtest-dev rapidjson-dev doxygen libcurl4-openssl-dev protobuf-compiler libprotobuf-dev libboost-all-dev
+```
+
+On macOS, equivalents via Homebrew: `boost`, `protobuf`, `curl`, `rapidjson`, `googletest`, `doxygen`.
+
 Build (outputs to `./build/`):
 ```bash
 ./scripts/build.sh -DCMAKE_BUILD_TYPE=Debug
@@ -52,12 +59,20 @@ Tests configure themselves via `GetDBClientForCISettings()` which points to `loc
 
 Coverage is enabled by building with `-DENABLE_TESTS=ON` (the default), which adds `-O0 -g --coverage` flags to the `dbs-map-api` target.
 
-## Code formatting
+## Code style
 
-The project uses clang-format with Allman brace style, 4-space indent, and no column limit:
+Pre-commit hooks enforce formatting and license headers. After cloning:
+```bash
+pre-commit install
+pre-commit run --all-files   # run manually
+```
+
+**C++ formatting** — Allman brace style, 4-space indent, no column limit (`.clang-format`):
 ```bash
 clang-format -i <file>
 ```
+
+**License headers** — every file must have an SPDX license header. C++ files use Apache-2.0; build/config files use CC0-1.0.
 
 ## Architecture
 
@@ -102,3 +117,7 @@ Proto sources are under `dbs-map-api/proto/db-sensors4rail-phase2/`. The CMake h
 | `externals/here-olp-sdk` | HERE OLP SDK core (HTTP, auth, catalog access) |
 | `externals/rapidjson` | JSON parsing for catalog/layer metadata |
 | `externals/smasher` | MurmurHash3 (`MurmurHash3.cpp` compiled directly into the main target) |
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on push to `main` and all PRs: build → test → coverage upload to Codecov. The mock server image (`dbs-map-mock-server/Dockerfile`, Python/Flask) is published to GHCR and pulled during CI for OTA tests.
