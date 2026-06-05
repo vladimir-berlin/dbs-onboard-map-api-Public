@@ -16,7 +16,7 @@ on:
 env:
   IMAGE_NAME: dbs-map-mock-server
   REGISTRY: ghcr.io
-  REPOSITORY: dsd-dbs/dbs-onboard-map-api
+  REPOSITORY: vladimir-berlin/dbs-onboard-map-api-public
 
 jobs:
   docker:

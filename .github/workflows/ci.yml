@@ -15,8 +15,6 @@ env:
   IS_MAIN_BRANCH: ${{ github.ref == 'refs/heads/main' }}
   IMAGE_NAME: dbs-map-mock-server
   VERSION: latest
-  REGISTRY: ghcr.io
-  REPOSITORY: dsd-dbs/dbs-onboard-map-api
   PORT: 8080
 
 jobs:
@@ -38,21 +36,15 @@ jobs:
         sudo apt-get install -y doxygen
         sudo apt-get install libcurl4-openssl-dev protobuf-compiler libprotobuf-dev libboost-all-dev -y --no-install-recommends --fix-missing
 
-    - name: Login to github container registry
-      uses: docker/login-action@v2
-      with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Pull mock server image
+    - name: Build mock server image
       run: |
-        docker pull ${{ env.REGISTRY }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        docker build -t ${{ env.IMAGE_NAME }}:${{ env.VERSION }} \
+        ${{github.workspace}}/${{ env.IMAGE_NAME }}
 
     - name: Run mock server
       run: |
         docker run -d -p ${{ env.PORT }}:${{ env.PORT }} -e PORT=${{ env.PORT }} \
-        ${{ env.REGISTRY }}/${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+        ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
 
     - name: Build DBS Onboard MAP API sources
       run: ${{github.workspace}}/scripts/build.sh -DCMAKE_BUILD_TYPE=Debug
