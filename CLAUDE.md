@@ -39,12 +39,7 @@ Run a single test by name:
 
 ### Mock server
 
-Tests that exercise the download/OTA path (`download/` test files) require a local mock server on port 8080. Run it with Docker:
-```bash
-docker run -p 8080:8080 ghcr.io/vladimir-berlin/dbs-onboard-map-api-Public/dbs-map-mock-server:latest
-```
-
-Or directly with Python (from `dbs-map-mock-server/`):
+Tests that exercise the download/OTA path (`download/` test files) require a local mock server on port 8080. Run it directly with Python (from `dbs-map-mock-server/`):
 ```bash
 cd dbs-map-mock-server && python dbs_map_mock_server.py
 ```
@@ -120,4 +115,6 @@ Proto sources are under `dbs-map-api/proto/db-sensors4rail-phase2/`. The CMake h
 
 ## CI
 
-GitHub Actions (`.github/workflows/ci.yml`) runs on push to `main` and all PRs: build → test → coverage upload to Codecov. The mock server image (`dbs-map-mock-server/Dockerfile`, Python/Flask) is published to GHCR and pulled during CI for OTA tests.
+GitHub Actions (`.github/workflows/ci.yml`) runs on push to `main` and all PRs: build → test → coverage upload to Codecov. It builds the mock server image locally from `dbs-map-mock-server/Dockerfile` rather than pulling from GHCR.
+
+`mock-server-ci.yml` publishes the mock server image to `ghcr.io/vladimir-berlin/dbs-onboard-map-api-public/dbs-map-mock-server` whenever `dbs-map-mock-server/` changes on `main`.
